@@ -13,6 +13,8 @@ all: $(JSFILES)
 .PHONY: clean
 clean:
 	rm -Rf ${DEPLOY_DIR}/js/*
+	rm -Rf node_modules/*
+	rm -Rf package*json
 
 .PHONY: repl
 repl:
