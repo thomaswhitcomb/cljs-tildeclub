@@ -22,8 +22,8 @@
  (fn [accum [x y]]
    (let [ res
          (cond
-           (= (universe [x y]) :l) (str accum  "<td>o</td>")
-           :else (str accum "<td>" "_" "</td>"))]
+           (= (universe [x y]) :l) (str accum  "<td class='live'></td>")
+           :else (str accum "<td class='dead'></td>"))]
      (if (= x (+ maxx (- margin 1)))
        (str accum "</tr><tr>")
        res))))

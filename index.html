@@ -15,6 +15,35 @@
       font: 400 15px/1.8 Lato, sans-serif;
       color: #777;
     }
+    table, th, td {
+      border: 1px solid black;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+    td {
+      text-align:center;
+      width:20px;
+      height:20px;
+    }
+    td.live{
+      background-color:green;
+    }
+    td.dead{
+      background-color:#cccccc;
+    }
+    .control-div {
+      float:left;
+      width:30%;
+      align-content: right;
+      border:1px solid green;
+    }
+    .table-div {
+     float:left;
+     width: 70%;
+      border:1px solid orange;
+    }
     footer {
       background-color: #dddddd;
       color: #333333;
@@ -127,7 +156,7 @@
   <div class="container text-center">
     <h1>Tom's Tilde Club Homepage</h1>
     <p>I will be filling this out soon!</p>
-    <div id='appPanel' style='display:block'>
+    <div id='appPanel' style='display:block;'>
     </div>
   </div>
   <br>
