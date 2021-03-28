@@ -12,36 +12,45 @@
 (def blinker2-off {[4 3] :l, [3 4] :l, [4 2] :l, [1 3] :l, [2 1] :l, [1 2] :l})
 
 (def square \u25FB)
+
+(defn is-alive [[k v]]
+  (= v :l))
+
+(defn select-alive
+  [universe]
+    (into {} (filter is-alive universe)))
+
 (defn get-element-by-id [id]
   (.call (aget js/document "getElementById") js/document id))
 
 (defn addhtml  [id html]
   (set!  (.-innerHTML (get-element-by-id id)) html))
 
-(defn build-table-fn [universe maxx margin]
+(defn build-table-fn [universe maxx ]
  (fn [accum [x y]]
-   (let [ res
+   (println [x y] (universe [x y]))
+   (let [ accum1
          (cond
            (= (universe [x y]) :l) (str accum  "<td class='live'></td>")
            :else (str accum "<td class='dead'></td>"))]
-     (if (= x (+ maxx (- margin 1)))
-       (str accum "</tr><tr>")
-       res))))
+     (if (= x maxx )
+       (str accum1 "</tr><tr>")
+       accum1))))
 
 (defn display
   [html-ele universe]
-  (def margin 3)
-  (def minx (apply min (map (fn [[x y]] x) (keys universe))))
-  (def maxx (apply max (map (fn [[x y]] x) (keys universe))))
-  (def miny (apply min (map (fn [[x y]] y) (keys universe))))
-  (def maxy (apply max (map (fn [[x y]] y) (keys universe))))
-  ;(str "<p> "minx " " maxx " " miny " " maxy "</p>" (.-innerHTML (get-element-by-id html-ele))))
-  (let [span (for [ y (range (+ maxy margin) (- miny margin) -1)
-                   x (range (- minx margin) (+ maxx margin) 1) ]
-               [x y])
-        html (str
-               (reduce (build-table-fn universe maxx margin) "<table><tr>" span)
-               "</tr></table")]
+  (def margin 1)
+  (println "universe: " universe (type universe))
+  (def minx (- (apply min (map (fn [[x y]] x) (keys (select-alive universe)))) margin))
+  (def maxx (+ (apply max (map (fn [[x y]] x) (keys (select-alive universe)))) margin))
+  (def miny (- (apply min (map (fn [[x y]] y) (keys (select-alive universe)))) margin))
+  (def maxy (+ (apply max (map (fn [[x y]] y) (keys (select-alive universe)))) margin))
+  (println minx maxx miny maxy)
+  (let [f (build-table-fn universe maxx)
+        table (str "<table><th colspan='" (inc (- maxx minx)) "'>" minx "," maxx ":" miny "," maxy "</th><tr>")
+        span (for [y (range maxy (- miny 1) -1)
+                   x (range minx (+ maxx 1) 1) ] [x y])
+        html (str (reduce f table span) "</tr></table")]
     (println html)
     (addhtml html-ele html)))
 
@@ -75,13 +84,6 @@
   (apply merge
     (for [a (surrounding-peers x y) ] {a :d})))
 
-(defn is-alive [[k v]]
-  (= v :l))
-
-(defn select-alive
-  [universe]
-    (into {} (filter is-alive universe)))
-
 (defn pad-the-board [universe]
   (let [
         alive (select-alive universe)
@@ -91,9 +93,9 @@
        ]
      (merge deads alive)))
 
-(defn  fast-forward[tick universe viewer ]
+(defn  fast-forward[tick universe]
   (loop [tick1 tick universe1 universe]
-    (viewer universe1)
+    universe1
     (let [padded-universe (pad-the-board universe1)]
       (cond
         (<= tick1 0) padded-universe
@@ -106,8 +108,11 @@
   (str
     (let [p (partial display html-ele)
           n (js/parseInt (.-value (get-element-by-id html-iteration)))
-          u (.-value (get-element-by-id html-universe))]
-      (select-alive (fast-forward n (rdr/read-string u) p )))))
+          u (.-value (get-element-by-id html-universe))
+          edn (rdr/read-string u) ]
+      (do
+        (p edn)
+        (select-alive (fast-forward n edn))))))
 
 
 ;(is (= (pad-the-board {[2 2]:l [2 3]:l [2 4]:l })
