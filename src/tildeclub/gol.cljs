@@ -36,8 +36,10 @@
        (str accum1 "</tr><tr>")
        accum1))))
 (defn compute-bounding-box [universe]
-  (do
-    (def margin 1)
+  (if (= (count universe) 0)
+    [1 20 1 20]
+    (do
+      (def margin 0)
     (def bounding-box [20 20])
     (def minx (- (apply min (map (fn [[x y]] x) (keys (select-alive universe)))) margin))
     (def maxx (+ (apply max (map (fn [[x y]] x) (keys (select-alive universe)))) margin))
@@ -50,7 +52,7 @@
     (println "minx:" minx "maxx:" maxx "miny:" miny "maxy:" maxy)
     (println "lmarginx:" lmarginx "rmarginx:" rmarginx)
     (println "add to x: " (- minx lmarginx) (+ rmarginx maxx) "add to y:" (quot 2 (- 15 (inc (- maxy miny)))))
-    [(- minx lmarginx) (+ rmarginx maxx) (- miny tmarginy) (+ bmarginy maxy)]))
+    [(- minx lmarginx) (+ rmarginx maxx) (- miny tmarginy) (+ bmarginy maxy)])))
 
 (defn display
   [html-ele universe]
