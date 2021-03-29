@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <title>Tom Whitcomb</title>
+    <style>
+    body {
+      font: 400 15px/1.8 Lato, sans-serif;
+      color: #777;
+      margin-top: 25px;
+      margin-left: 100px;
+      margin-right: 200px;
+      margin-bottom: 25px;
+    }
+    </style>
+  </head>
+  <body>
+	  <h3>Overview</h3>
+	  <p>The Game Of Life is played on a 2 dimension grid. The <code>x</code> axis is horizontal and the <code>y</code> axis is vertical.  Each node on the grid can either be live or dead.  The live nodes are green and the dead nodes are not green.</p>
+	  <p>The Universe for the GOL is the set of live nodes.  Each node is described with a catesian X,Y pair and a <code>:l</code> or <code>:d</code> value.  The <code>:l</code> means live and you can guess what <code>:d</code> stands for.  Each cartesion pair is inclosed in a  square brackets and is followed by a <code>:l</code> or <code>:d</code>. </p>
+	  <p>For example, "<code>[3 7] :l</code>" is a node at coordinate 3,7 and it is live.</p>
+	  <p>A set of nodes is inclosed in a pair of curly brackets. So "<code>{ [5 6] :l, [8 17] :l}</code>" is a universe of two nodes.</p>
+	  <p>The game starts out with a universe called "diehard".  This universe dies out after 130 runs (evolutions).  Every time you push the "Run Game of Life" button, the universe evolves once.  The rules for evolution are:
+	  <ul>
+		  <li>Any live cell with two or three live neighbours survives.</li>
+		  <li>Any dead cell with three live neighbours becomes a live cell.</li>
+		  <li> All other live cells die in the next generation. Similarly, all other dead cells stay dead.</li>
+	  </ul>
+
+	  <p>The initial universe constitutes the seed of the game. The first generation is created by applying the above rules simultaneously to every node in the universe; births and deaths occur simultaneously, and the discrete moment at which this happens is sometimes called an tick. Each generation is a pure function of the preceding one. The rules continue to be applied repeatedly to create further generations.
+
+	  <h3>Predefined Universes</h3>
+	  <p>There are many pre-defined universes.  Here is a <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life#Examples_of_patterns">common set</a>.  There are a few.  You can cut and paste them on the game page in the Universe State text field.
+	  <dl>
+		  <dt>Oscillating blinker</dt>
+		  <dl><code>{[2 2]:l [2 3]:l [2 4]:l }</code></dl>
+		  <dt>Oscillating beacon</dt>
+		  <dl><code>{[2 5]:l [2 6]:l [3 5]:l [3 6]:l [4 3]:l [4 4]:l [5 3]:l [5 4]:l}</code></dl>
+		  <dt>Spaceship glider</dt>
+		  <dl><code>{[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}</code></dl>
+		  <dt>Oscillating toad</dt>
+		  <dl><code>{[1,2] :l,[2,2] :l,[2,3] :l,[3,3] :l, [3,2] :l,[4,3] :l}</code></dl>
+  </body>
+</html>
