@@ -26,11 +26,15 @@
 
 (defn app-content []
   [:div
-   [:p "Until I do, you can entertain yourself by running Conmay's Game of Life. Enter the number of iterations of the game"]
+   [:p "Until I do, you can entertain yourself by running Conmay's Game of Life.  I know the UI sucks but the game is functional and I'll make it look better soon.  Did I say this is written in ClojureScript? "]
+   [:hr]
+   [:div {:class "form-group"}
+     [:label {:for "comment" :text-align "left"}"Universe State"]
+     [:textarea {:id "golUniverse" :class "form-control" :rows="5" :id="comment"} "{[3,2] :l [3,3] :l [2,3] :l [7,2] :l [8,2] :l,[9,2] :l [8 4] :l}"]]
    [:div {:class "control-div"}
-     [:input {:id "golIteration" :type "text" :placeholder "iterations" :value "1"}]
-     [:input {:id "golUniverse" :type "text" :placeholder "universe" :value "{[3,2] :l [3,3] :l [2,3] :l [7,2] :l  [8,2] :l,[9,2] :l [8 4] :l}"}]
-     [:button {:id "myBtn" :class "btn btn-success" :onclick "tildeclub.core.run_gol()"} "Run Game of Life"]]
+    [:input {:id "golIteration" :type "text" :placeholder "evolution cycles" :value "1"}]
+    [:br]
+    [:button {:id "myBtn" :class "btn btn-success" :onclick "tildeclub.core.run_gol()"} "Run Game of Life"]]
    [:div {:id "golOutput" :class "table-div"}]])
 
 

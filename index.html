@@ -4,23 +4,35 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <title>Tom Whitcomb</title>
     <style>
     body {
       font: 400 15px/1.8 Lato, sans-serif;
       color: #777;
     }
-    table, th, td {
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    th {
       border: 1px solid black;
+    }
+    label {
+	    text-align: left;
+	    float:left;
     }
     table {
       border-collapse: collapse;
       margin: 0 auto;
+      border: 1px solid black;
     }
     td {
       text-align:center;
@@ -29,6 +41,7 @@
     }
     td.live{
       background-color:green;
+      border: 1px solid black
     }
     td.dead{
       background-color:#cccccc;
@@ -37,12 +50,10 @@
       float:left;
       width:30%;
       align-content: right;
-      border:1px solid green;
     }
     .table-div {
-     float:left;
-     width: 70%;
-      border:1px solid orange;
+      float:left;
+      width: 70%;
     }
     footer {
       background-color: #dddddd;
@@ -161,12 +172,17 @@
   </div>
   <br>
   <br>
+  <!--
   <footer class="text-right">
     <p>Powered by ClojureScript</p>
   </footer>
+  -->
   <script src='js/core.js'> </script>
   <script>
-	  window.addEventListener('load',function(){tildeclub.core.render();});
+	  window.addEventListener('load',function(){
+		  tildeclub.core.render();
+		  tildeclub.core.run_gol();
+	  });
   </script>
 </body>
 </html>
