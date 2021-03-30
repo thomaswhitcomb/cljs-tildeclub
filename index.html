@@ -4,17 +4,19 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <title>Tom Whitcomb</title>
     <style>
     body {
       font: 400 15px/1.8 Lato, sans-serif;
       color: #777;
+    }
+    a {
     }
     input{
        display:none;
@@ -38,12 +40,12 @@
       border: 1px solid black;
     }
     td {
-      text-align:center;
       width:20px;
       height:20px;
+      border: 1px solid #eeeeee
     }
     td.live{
-      background-color:green;
+      background-color:#00C851;
       border: 1px solid black
     }
     td.dead{
@@ -52,53 +54,28 @@
     .control-div {
       float:left;
       width:30%;
-      align-content: right;
     }
     .table-div {
       float:left;
       width: 70%;
+    }
+    .universe-div{
+      border: 1px solid blue;
+    }
+    textarea{
+	    width: 100%;
     }
     footer {
       background-color: #dddddd;
       color: #333333;
       padding: 5px;
     }
-    .container {
-      padding: 80px 120px;
-    }
-    .bg-1 {
-      background: #2d2d30;
-      color: #bdbdbd;
-    }
-    .bg-1 h3 {color: #fff;}
-    .bg-1 p {font-style: italic;}
-
-    .list-group-item:first-child {
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
-    .list-group-item:last-child {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-    .btn {
-      padding: 10px 20px;
-      background-color: #333;
-      color: #f1f1f1;
-      border-radius: 0;
-      transition: .2s;
-    }
-    .btn:hover, .btn:focus {
-      border: 1px solid #333;
-      background-color: #fff;
-      color: #000;
-    }
     </style>
   </head>
   <body>
-  <div class="container text-center">
+  <div class="container">
     <h1>Tom's Tilde Club Homepage</h1>
-    <p>I will be filling this out soon!</p>
+    <p>I will be filling this out soon! Until I do, you can entertain yourself by running Conmay's Game of Life. I know the UI sucks but the game is functional and I'll make it look better soon. Did I say this is written in ClojureScript?</p>
     <div id='appPanel'>
     </div>
   </div>
@@ -109,11 +86,11 @@
     <p>Powered by ClojureScript</p>
   </footer>
   -->
-  <script src='js/core.js'> </script>
+  <script src='js/shim.js'> </script>
   <script>
 	  window.addEventListener('load',function(){
-		  tildeclub.core.render();
-		  tildeclub.core.run_gol();
+		  tildeclub.shim.render();
+		  tildeclub.shim.run_gol();
 	  });
   </script>
 </body>

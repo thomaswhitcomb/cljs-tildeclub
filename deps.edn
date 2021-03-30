@@ -13,13 +13,12 @@
   ;; Paths
   ;;   Directories in the current project to include in the classpath
 
-  ;; :paths ["src"]
+  :paths ["src" "test"]
 
   ;; External dependencies
 
   :deps {
     org.clojure/clojurescript {:mvn/version "1.10.758"}
-    binaryage/oops {:mvn/version "0.7.0"}
     hiccups {:mvn/version "0.3.0"}
   }
 
@@ -32,9 +31,12 @@
 	;;     :extra-paths - vector of additional paths to add to the classpath
 	;;     :classpath-overrides - map of lib to path that overrides the result of resolving deps
 
-  ;; :aliases {
+ :aliases {
   ;;   :deps {:extra-deps {org.clojure/tools.deps.alpha {:mvn/version "0.11.905"}}}
-  ;;   :test {:extra-paths ["test"]}
+    :test {:main-opts ["-m" "cljs.main"
+                       "-c" "tildeclub.test-runner"
+                       "-re" "node"
+                      "-r" ]}}
   ;; }
 
   ;; Provider attributes

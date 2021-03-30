@@ -1,5 +1,6 @@
-(ns tildeclub.gol
-  (:require [cljs.reader :as rdr]))
+(ns tildeclub.cljs.gol
+  (:require [cljs.reader :as rdr]
+            [tildeclub.cljs.dom :as dom]))
 
 (def oscillator-blinker {[2 2]:l [2 3]:l [2 4]:l })
 (def oscillator-beacon {[2 5]:l [2 6]:l [3 5]:l [3 6]:l [4 3]:l [4 4]:l [5 3]:l [5 4]:l  })
@@ -18,13 +19,7 @@
 
 (defn select-alive
   [universe]
-    (into {} (filter is-alive universe)))
-
-(defn get-element-by-id [id]
-  (.call (aget js/document "getElementById") js/document id))
-
-(defn addhtml  [id html]
-  (set!  (.-innerHTML (get-element-by-id id)) html))
+  (into {} (filter is-alive universe)))
 
 (defn build-table-fn [universe maxx ]
  (fn [accum [x y]]
@@ -49,22 +44,17 @@
     (def rmarginx (. js/Math round (/ (- (first bounding-box) (inc (- maxx minx))) 2)))
     (def tmarginy (quot (- (second bounding-box) (inc (- maxy miny))) 2))
     (def bmarginy (. js/Math round (/ (- (second bounding-box) (inc (- maxy miny))) 2)))
-    (println "minx:" minx "maxx:" maxx "miny:" miny "maxy:" maxy)
-    (println "lmarginx:" lmarginx "rmarginx:" rmarginx)
-    (println "add to x: " (- minx lmarginx) (+ rmarginx maxx) "add to y:" (quot 2 (- 15 (inc (- maxy miny)))))
     [(- minx lmarginx) (+ rmarginx maxx) (- miny tmarginy) (+ bmarginy maxy)])))
 
 (defn display
   [html-ele universe]
-  (println "universe: " universe (type universe))
   (let [[minx maxx miny maxy] (compute-bounding-box universe)
         f (build-table-fn universe maxx)
         table (str "<table><th colspan='" (inc (- maxx minx)) "'>" minx "," maxx ":" miny "," maxy "</th><tr>")
         span (for [y (range maxy (- miny 1) -1)
                    x (range minx (+ maxx 1) 1) ] [x y])
         html (str (reduce f table span) "</tr></table")]
-    (println html)
-    (addhtml html-ele html)))
+    (dom/add-html html-ele html)))
 
 
 (defn surrounding-peers
@@ -119,8 +109,8 @@
 (defn run [html-ele html-universe html-iteration]
   (str
     (let [p (partial display html-ele)
-          n (js/parseInt (.-value (get-element-by-id html-iteration)))
-          u (.-value (get-element-by-id html-universe))
+          n (js/parseInt (.-value (dom/get-element-by-id html-iteration)))
+          u (.-value (dom/get-element-by-id html-universe))
           edn (rdr/read-string u) ]
       (do
         (p edn)
