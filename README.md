@@ -8,6 +8,8 @@ My tildeclub page implemented in ClojureScript
 
 - Install Clojure  (Take current version that includes `cljs.main`)
 
+- Install node (used for tests)
+
 ## Build
 
 From a command line:
