@@ -1,5 +1,0 @@
-{
- :optimizations :none
- :install-deps true ;; NEW
- :target :none
- }

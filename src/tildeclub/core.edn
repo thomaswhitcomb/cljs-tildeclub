@@ -1,6 +1,0 @@
-{
- :optimizations :none
- :install-deps true ;; NEW
- :npm-deps {:left-pad "1.1.3"} ;; NEW
- :target :browser
- }
