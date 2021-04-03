@@ -31,8 +31,8 @@
       border: 1px solid black;
     }
     label {
-	    text-align: left;
-	    float:left;
+      text-align: left;
+      float:left;
     }
     table {
       border-collapse: collapse;
@@ -63,7 +63,7 @@
       border: 1px solid blue;
     }
     textarea{
-	    width: 100%;
+      width: 100%;
     }
     footer {
       background-color: #dddddd;
@@ -76,22 +76,26 @@
   <div class="container">
     <h1>Tom's Tilde Club Homepage</h1>
     <p>I will be filling this out soon! Until I do, you can entertain yourself by running Conmay's Game of Life. I know the UI sucks but the game is functional and I'll make it look better soon. Did I say this is written in ClojureScript?</p>
-    <div id='appPanel'>
-    </div>
+    <div id='appPanel' class="container">
+      <hr/>
+      <div class="control-div">
+        <button id="myBtn"  type="button"  class="btn btn-lg btn-success" onclick="tildeclub.shim.run_gol()">Run</button>
+        <div>
+          <a href="./help/universe.html">"Create your own universe...</a>
+          <textarea id="golUniverse" rows="10">{[3,2] :l [3,3] :l [2,3] :l [7,2] :l [8,2] :l,[9,2] :l [8 4] :l}</textarea>
+        </div>
+      </div>
+      <div id="golOutput" class="table-div"></div>
+      <input id="golIteration" type="text" placeholder="evolution cycles" value="1">
   </div>
   <br>
   <br>
-  <!--
-  <footer class="text-right">
-    <p>Powered by ClojureScript</p>
-  </footer>
-  -->
   <script src='js/shim.js'> </script>
   <script>
-	  window.addEventListener('load',function(){
-		  tildeclub.shim.render();
-		  tildeclub.shim.run_gol();
-	  });
+    window.addEventListener('load',function(){
+      tildeclub.shim.render();
+      tildeclub.shim.run_gol();
+    });
   </script>
 </body>
 </html>

@@ -106,7 +106,7 @@
                 (into {} (map (fn [kv](evolve kv padded-universe)) padded-universe)))
       ))))
 
-(defn run [html-ele html-universe html-iteration]
+(defn run [{html-ele :output html-universe :universe html-iteration :iterations}]
   (str
     (let [p (partial display html-ele)
           n (js/parseInt (.-value (dom/get-element-by-id html-iteration)))
@@ -115,22 +115,3 @@
       (do
         (p edn)
         (select-alive (fast-forward n edn))))))
-
-
-;(is (= (pad-the-board {[2 2]:l [2 3]:l [2 4]:l })
-;       {[2 2] :l, [2 3] :l, [2 5] :d, [3 3] :d, [1 1] :d, [3 4] :d, [1 4] :d, [1 3] :d, [1 5] :d, [2 4] :l, [3 1] :d, [2 1] :d, [1 2] :d, [3 5] :d, [3 2] :d}))
-
-;(is (=  (fast-forward 100 {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l} (fn [_] nil))
-;       {[27 -23] :d, [29 -23] :d, [27 -25] :d, [26 -21] :d, [27 -22] :l, [29 -22] :d, [28 -23] :l, [27 -21] :d, [25 -25] :d, [25 -23] :d, [26 -25] :d, [25 -24] :d, [28 -21] :d, [28 -24] :l, [26 -22] :d, [26 -24] :l, [27 -24] :l, [26 -23] :d, [29 -24] :d, [28 -22] :d, [28 -25] :d, [29 -25] :d}))
-
-;(is (= (live-neighbours-around  [0 0]  {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}) [[1 1]] ))
-;(is (= (live-neighbours-around  [1 2]  {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}) [[1 1] [2 3] [2 1]] ))
-;(is (= (select-alive (fast-forward 1 blinker1-on (fn [_] nil)))) blinker1-off)
-;(is (= (select-alive (fast-forward 2 blinker1-on (fn [_] nil)))) blinker1-on)
-;(is (= (select-alive (fast-forward 3 blinker1-on (fn [_] nil)))) blinker1-off)
-;(is (= (select-alive (fast-forward 4 blinker1-on (fn [_] nil)))) blinker1-on)
-;(is (= (select-alive (fast-forward 1 blinker2-on (fn [_] nil)))) blinker2-off)
-;(is (= (select-alive (fast-forward 2 blinker2-on (fn [_] nil)))) blinker2-on)
-;(is (= (select-alive (fast-forward 3 blinker2-on (fn [_] nil)))) blinker2-off)
-;(is (= (select-alive (fast-forward 4 blinker2-on (fn [_] nil)))) blinker2-on)
-;(select-alive (fast-forward 130 diehard display))
