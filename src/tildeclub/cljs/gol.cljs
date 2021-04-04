@@ -2,6 +2,8 @@
   (:require [cljs.reader :as rdr]
             [tildeclub.cljs.dom :as dom]))
 
+
+(def size 15)
 (def oscillator-blinker {[2 2]:l [2 3]:l [2 4]:l })
 (def oscillator-beacon {[2 5]:l [2 6]:l [3 5]:l [3 6]:l [4 3]:l [4 4]:l [5 3]:l [5 4]:l  })
 (def spaceship-glider {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l})
@@ -13,7 +15,6 @@
 (def blinker2-off {[4 3] :l, [3 4] :l, [4 2] :l, [1 3] :l, [2 1] :l, [1 2] :l})
 
 (def square \u25FB)
-
 (defn is-alive [[k v]]
   (= v :l))
 
@@ -21,41 +22,54 @@
   [universe]
   (into {} (filter is-alive universe)))
 
-(defn build-table-fn [universe maxx ]
+(defn  corners [universe]
+  (let [fx (fn [{minx :minx
+                 maxx :maxx
+                 miny :miny
+                 maxy :maxy} [[x y] _]]
+             {:minx (if (nil? minx) x (min minx x))
+              :maxx (if (nil? maxx) x (max maxx x))
+              :miny (if (nil? miny) y (min miny y))
+              :maxy (if (nil? maxy) y (max maxy y))})]
+    (reduce fx {:minx nil :maxx nil :miny nil :maxy nil} universe)))
+
+(defn build-table-fn [universe minx maxx miny ]
  (fn [accum [x y]]
    (let [ accum1
          (cond
            (= (universe [x y]) :l) (str accum  "<td class='live'></td>")
+           ;(= y miny) (str accum "<td class='dead'>" x "</td>")
+           (= x minx) (str accum "<td>" y "</td><td class='dead'></td>")
            :else (str accum "<td class='dead'></td>"))]
      (if (= x maxx )
        (str accum1 "</tr><tr>")
        accum1))))
 (defn compute-bounding-box [universe]
   (if (= (count universe) 0)
-    [1 20 1 20]
-    (do
-      (def margin 0)
-    (def bounding-box [20 20])
-    (def minx (- (apply min (map (fn [[x y]] x) (keys (select-alive universe)))) margin))
-    (def maxx (+ (apply max (map (fn [[x y]] x) (keys (select-alive universe)))) margin))
-    (def miny (- (apply min (map (fn [[x y]] y) (keys (select-alive universe)))) margin))
-    (def maxy (+ (apply max (map (fn [[x y]] y) (keys (select-alive universe)))) margin))
-    (def lmarginx (quot (- (first bounding-box) (inc (- maxx minx))) 2))
-    (def rmarginx (. js/Math round (/ (- (first bounding-box) (inc (- maxx minx))) 2)))
-    (def tmarginy (quot (- (second bounding-box) (inc (- maxy miny))) 2))
-    (def bmarginy (. js/Math round (/ (- (second bounding-box) (inc (- maxy miny))) 2)))
-    [(- minx lmarginx) (+ rmarginx maxx) (- miny tmarginy) (+ bmarginy maxy)])))
+    [1 size 1 size]
+    (let [ margin 0
+           bounding-box [size size]
+           corners (corners universe)
+           lmarginx (quot (- (first bounding-box) (inc (- (corners :maxx) (corners :minx)))) 2)
+           rmarginx (. js/Math round (/ (- (first bounding-box) (inc (- (corners :maxx) (corners :minx)))) 2))
+           tmarginy (quot (- (second bounding-box) (inc (- (corners :maxy) (corners :miny)))) 2)
+           bmarginy (. js/Math round (/ (- (second bounding-box) (inc (- (corners :maxy) (corners :miny)))) 2))]
+      [(- (corners :minx) lmarginx) (+ rmarginx (corners :maxx)) (- (corners :miny) tmarginy) (+ bmarginy (corners :maxy))])))
+
+(defn xaxis [xmin xmax]
+  (let [axis (reduce (fn [accum ele] (str accum "<td>" ele "</td>")) "" (range xmin (inc xmax)))]
+  (str "<tr><td></td>" axis)))
 
 (defn display
   [html-ele universe]
+  (println "display has " universe)
   (let [[minx maxx miny maxy] (compute-bounding-box universe)
-        f (build-table-fn universe maxx)
+        f (build-table-fn universe minx maxx miny)
         table (str "<table><th colspan='" (inc (- maxx minx)) "'>" minx "," maxx ":" miny "," maxy "</th><tr>")
         span (for [y (range maxy (- miny 1) -1)
                    x (range minx (+ maxx 1) 1) ] [x y])
-        html (str (reduce f table span) "</tr></table")]
+        html (str (reduce f table span) (xaxis minx maxx) "</tr></table")]
     (dom/add-html html-ele html)))
-
 
 (defn surrounding-peers
   [x y]
@@ -72,16 +86,6 @@
   [[x y] universe]
   (filter #(= (universe % :d) :l) (surrounding-peers x y)))
 
-(defn evolve
-  [[k v] universe]
-  (let [live-count (count (live-neighbours-around k universe))]
-    (cond
-     (and (= v :l)
-          (or (= live-count 2) (= live-count 3))) [k :l]
-     (= v :l) [k :d]
-     (= live-count 3) [k :l]
-     :else [k :d])))
-
 (defn pad-cell [[x y]]
   (apply merge
     (for [a (surrounding-peers x y) ] {a :d})))
@@ -95,6 +99,17 @@
        ]
      (merge deads alive)))
 
+
+(defn evolve
+  [[k v] universe]
+  (let [live-count (count (live-neighbours-around k universe))]
+    (cond
+     (and (= v :l)
+          (or (= live-count 2) (= live-count 3))) [k :l]
+     (= v :l) [k :d]
+     (= live-count 3) [k :l]
+     :else [k :d])))
+
 (defn  fast-forward[tick universe]
   (loop [tick1 tick universe1 universe]
     universe1
@@ -106,7 +121,7 @@
                 (into {} (map (fn [kv](evolve kv padded-universe)) padded-universe)))
       ))))
 
-(defn run [html-ele html-universe html-iteration]
+(defn run [{html-ele :output html-universe :universe html-iteration :iterations}]
   (str
     (let [p (partial display html-ele)
           n (js/parseInt (.-value (dom/get-element-by-id html-iteration)))
@@ -115,22 +130,3 @@
       (do
         (p edn)
         (select-alive (fast-forward n edn))))))
-
-
-;(is (= (pad-the-board {[2 2]:l [2 3]:l [2 4]:l })
-;       {[2 2] :l, [2 3] :l, [2 5] :d, [3 3] :d, [1 1] :d, [3 4] :d, [1 4] :d, [1 3] :d, [1 5] :d, [2 4] :l, [3 1] :d, [2 1] :d, [1 2] :d, [3 5] :d, [3 2] :d}))
-
-;(is (=  (fast-forward 100 {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l} (fn [_] nil))
-;       {[27 -23] :d, [29 -23] :d, [27 -25] :d, [26 -21] :d, [27 -22] :l, [29 -22] :d, [28 -23] :l, [27 -21] :d, [25 -25] :d, [25 -23] :d, [26 -25] :d, [25 -24] :d, [28 -21] :d, [28 -24] :l, [26 -22] :d, [26 -24] :l, [27 -24] :l, [26 -23] :d, [29 -24] :d, [28 -22] :d, [28 -25] :d, [29 -25] :d}))
-
-;(is (= (live-neighbours-around  [0 0]  {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}) [[1 1]] ))
-;(is (= (live-neighbours-around  [1 2]  {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}) [[1 1] [2 3] [2 1]] ))
-;(is (= (select-alive (fast-forward 1 blinker1-on (fn [_] nil)))) blinker1-off)
-;(is (= (select-alive (fast-forward 2 blinker1-on (fn [_] nil)))) blinker1-on)
-;(is (= (select-alive (fast-forward 3 blinker1-on (fn [_] nil)))) blinker1-off)
-;(is (= (select-alive (fast-forward 4 blinker1-on (fn [_] nil)))) blinker1-on)
-;(is (= (select-alive (fast-forward 1 blinker2-on (fn [_] nil)))) blinker2-off)
-;(is (= (select-alive (fast-forward 2 blinker2-on (fn [_] nil)))) blinker2-on)
-;(is (= (select-alive (fast-forward 3 blinker2-on (fn [_] nil)))) blinker2-off)
-;(is (= (select-alive (fast-forward 4 blinker2-on (fn [_] nil)))) blinker2-on)
-;(select-alive (fast-forward 130 diehard display))
