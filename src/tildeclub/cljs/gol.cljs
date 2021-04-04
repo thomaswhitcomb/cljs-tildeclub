@@ -3,6 +3,7 @@
             [tildeclub.cljs.dom :as dom]))
 
 
+(def size 15)
 (def oscillator-blinker {[2 2]:l [2 3]:l [2 4]:l })
 (def oscillator-beacon {[2 5]:l [2 6]:l [3 5]:l [3 6]:l [4 3]:l [4 4]:l [5 3]:l [5 4]:l  })
 (def spaceship-glider {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l})
@@ -43,7 +44,6 @@
      (if (= x maxx )
        (str accum1 "</tr><tr>")
        accum1))))
-(def size 10)
 (defn compute-bounding-box [universe]
   (if (= (count universe) 0)
     [1 size 1 size]
