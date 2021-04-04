@@ -12,6 +12,10 @@
   (is (= (gol/live-neighbours-around  [0 0]  {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}) [[1 1]] ))
   (is (= (gol/live-neighbours-around  [1 2]  {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l}) [[1 1] [2 3] [2 1]] )))
 
+(deftest test-corners
+  (is (= (gol/corners {[3 2] :l}) {:minx 3 :maxx 3 :miny 2 :maxy 2}))
+  (is (= (gol/corners {[3 2] :l [7 1] :l}) {:minx 3 :maxx 7 :miny 1 :maxy 2})))
+
 (deftest test-full-runs
   (is (= (gol/select-alive (gol/fast-forward 1 gol/blinker1-on )) gol/blinker1-off))
   (is (= (gol/select-alive (gol/fast-forward 2 gol/blinker1-on )) gol/blinker1-on))
