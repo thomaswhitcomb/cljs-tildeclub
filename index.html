@@ -19,7 +19,9 @@
     a {
     }
     input{
+	    /*
        display:none;
+       */
     }
     hr {
       margin-top: 1rem;
@@ -80,17 +82,35 @@
     <div id='appPanel' class="container">
       <hr/>
       <div class="control-div">
-        <button id="myBtn"  type="button"  class="btn btn-lg btn-success" onclick="tildeclub.shim.run_gol()">Run</button>
+	      <button id="myBtn"  type="button"  class="btn btn-lg btn-success" onclick="runner(document.getElementById('golIteration').value);">Run</button>
         <div>
           <a href="./help/universe.html">"Create your own universe...</a>
           <textarea id="golUniverse" rows="10">{[3,2] :l [3,3] :l [2,3] :l [7,2] :l [8,2] :l,[9,2] :l [8 4] :l}</textarea>
+	  <label for="golIteration">Evolutions per Run: &nbsp; </label>
+	  <input id="golIteration" name="golIteration" type="text" size="2" maxlength="2" minlength="1" min="1"  value="1">
         </div>
       </div>
       <div id="golOutput" class="table-div"></div>
-      <input id="golIteration" type="text" placeholder="evolution cycles" value="1">
   </div>
   <br>
-  <br>
+  <script>
+    function runner(i){
+      if(i <= 0){
+        return;
+      }
+      let myPromise = new Promise(function (myResolve){
+        tildeclub.shim.run_gol();
+        setTimeout(function(){
+          myResolve(i-1)
+        },500);
+      });
+      myPromise.then(
+        function(value){
+         runner(value);
+        }
+      )
+    }
+  </script>
   <script src='js/shim.js'> </script>
   <script>
     window.addEventListener('load',function(){

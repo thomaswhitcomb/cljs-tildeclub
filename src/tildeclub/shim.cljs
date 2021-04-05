@@ -14,6 +14,5 @@
      (.-value (dom/get-element-by-id "golUniverse"))
      (gol/run
        {:output "golOutput"
-        :universe "golUniverse"
-        :iterations "golIteration"})))
+        :universe "golUniverse"})))
 

@@ -62,10 +62,9 @@
 
 (defn display
   [html-ele universe]
-  (println "display has " universe)
   (let [[minx maxx miny maxy] (compute-bounding-box universe)
         f (build-table-fn universe minx maxx miny)
-        table (str "<table><th colspan='" (inc (- maxx minx)) "'>" minx "," maxx ":" miny "," maxy "</th><tr>")
+        table (str "<table><tr>")
         span (for [y (range maxy (- miny 1) -1)
                    x (range minx (+ maxx 1) 1) ] [x y])
         html (str (reduce f table span) (xaxis minx maxx) "</tr></table")]
@@ -121,12 +120,11 @@
                 (into {} (map (fn [kv](evolve kv padded-universe)) padded-universe)))
       ))))
 
-(defn run [{html-ele :output html-universe :universe html-iteration :iterations}]
+(defn run [{html-ele :output html-universe :universe}]
   (str
     (let [p (partial display html-ele)
-          n (js/parseInt (.-value (dom/get-element-by-id html-iteration)))
           u (.-value (dom/get-element-by-id html-universe))
           edn (rdr/read-string u) ]
       (do
         (p edn)
-        (select-alive (fast-forward n edn))))))
+        (select-alive (fast-forward 1 edn))))))
