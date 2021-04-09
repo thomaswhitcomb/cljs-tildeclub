@@ -3,7 +3,7 @@
             [tildeclub.cljs.dom :as dom]))
 
 
-(def size 15)
+(def size 6)
 (def oscillator-blinker {[2 2]:l [2 3]:l [2 4]:l })
 (def oscillator-beacon {[2 5]:l [2 6]:l [3 5]:l [3 6]:l [4 3]:l [4 4]:l [5 3]:l [5 4]:l  })
 (def spaceship-glider {[1 1]:l [2 1]:l [3 1]:l [3 2]:l [2 3]:l})
@@ -37,24 +37,30 @@
  (fn [accum [x y]]
    (let [ accum1
          (cond
+           (and (= (universe [x y]) :l) (= x minx)) (str accum "<td>" y "</td><td class='live'></td>")
            (= (universe [x y]) :l) (str accum  "<td class='live'></td>")
-           ;(= y miny) (str accum "<td class='dead'>" x "</td>")
            (= x minx) (str accum "<td>" y "</td><td class='dead'></td>")
            :else (str accum "<td class='dead'></td>"))]
-     (if (= x maxx )
+     (if (>= x maxx )
        (str accum1 "</tr><tr>")
        accum1))))
+
 (defn compute-bounding-box [universe]
   (if (= (count universe) 0)
     [1 size 1 size]
     (let [ margin 0
-           bounding-box [size size]
            corners (corners universe)
-           lmarginx (quot (- (first bounding-box) (inc (- (corners :maxx) (corners :minx)))) 2)
-           rmarginx (. js/Math round (/ (- (first bounding-box) (inc (- (corners :maxx) (corners :minx)))) 2))
-           tmarginy (quot (- (second bounding-box) (inc (- (corners :maxy) (corners :miny)))) 2)
-           bmarginy (. js/Math round (/ (- (second bounding-box) (inc (- (corners :maxy) (corners :miny)))) 2))]
-      [(- (corners :minx) lmarginx) (+ rmarginx (corners :maxx)) (- (corners :miny) tmarginy) (+ bmarginy (corners :maxy))])))
+           width (inc (- (corners :maxx) (corners :minx)))
+           height (inc (- (corners :maxy) (corners :miny)))
+           lmarginx (quot (- size width) 2)
+           rmarginx (. js/Math round (/ (- size width) 2))
+           tmarginy (quot (- size height) 2)
+           bmarginy (. js/Math round (/ (- size height) 2))
+           ;(assert (= size (+ lmarginx rmarginx width)))
+           ;(assert (= size (+ tmarginx bmarginx height)))
+           box [(- (corners :minx) lmarginx) (+ rmarginx (corners :maxx)) (- (corners :miny) tmarginy) (+ bmarginy (corners :maxy))]]
+           (println "size: "  size "width: " (+ lmarginx rmarginx width) lmarginx "," rmarginx "," width "height: " (+ tmarginy bmarginy height) tmarginy "," bmarginy "," height)
+      box)))
 
 (defn xaxis [xmin xmax]
   (let [axis (reduce (fn [accum ele] (str accum "<td>" ele "</td>")) "" (range xmin (inc xmax)))]
